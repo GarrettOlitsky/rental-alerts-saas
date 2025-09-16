@@ -35,6 +35,7 @@ This project demonstrates **backend scraping, frontend UI, and basic project str
 ```bash
 git clone https://github.com/GarrettOlitsky/rental-alerts-saas.git
 cd rental-alerts-saas
+```
 ### 2. Create a virtual environment (optional but recommended
 python -m venv env
 .\env\Scripts\activate  # Windows
