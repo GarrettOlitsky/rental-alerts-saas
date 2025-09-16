@@ -1,7 +1,6 @@
 # Rental Alerts SaaS
 
 A Python SaaS MVP that scrapes rental property listings and displays them in a simple dashboard.  
-This project demonstrates **backend scraping, frontend UI, and basic project structure** for a portfolio-ready GitHub repository.
 
 ---
 
@@ -12,7 +11,8 @@ This project demonstrates **backend scraping, frontend UI, and basic project str
 - Frontend HTML page to display dashboard
 - Ready for future integration: database models, CSV/JSON export, email alerts
 - Clean folder structure:
-- rental-alerts-saas/
+```
+rental-alerts-saas/
 ├── backend/
 │
 │ ├──
@@ -25,7 +25,7 @@ This project demonstrates **backend scraping, frontend UI, and basic project str
 ├── data/
 ├── README.md
 └── .gitignore
-
+```
 ---
 
 ## **Getting Started**
