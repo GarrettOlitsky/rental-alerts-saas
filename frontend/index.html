@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rental Alerts SaaS</title>
+</head>
+<body>
+    <h1>Rental Alerts</h1>
+    <form id="scrape-form">
+        <input type="text" name="location" placeholder="City (e.g., columbus)" required>
+        <input type="number" name="min_price" placeholder="Min Price" required>
+        <input type="number" name="max_price" placeholder="Max Price" required>
+        <button type="submit">Scrape</button>
+    </form>
+    <pre id="results"></pre>
+
+    <script>
+        const form = document.getElementById('scrape-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const res = await fetch('/scrape', { method: 'POST', body: formData });
+            const data = await res.json();
+            document.getElementById('results').textContent = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+</html>
