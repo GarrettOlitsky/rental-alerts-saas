@@ -5,91 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rental Alerts SaaS</title>
     <style>
-        /* Reset default margin and font */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f4f9;
+            background: #f0f2f5;
             color: #333;
         }
 
-        /* Center container */
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 50px auto;
             padding: 30px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         h1 {
             text-align: center;
             color: #e74c3c;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
         }
 
         form {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
+            margin-bottom: 30px;
         }
 
-        input, button {
+        form input, form button {
             padding: 12px 15px;
             font-size: 16px;
             border-radius: 8px;
             border: 1px solid #ccc;
         }
 
-        input:focus {
+        form input:focus {
             outline: none;
             border-color: #e74c3c;
-            box-shadow: 0 0 5px rgba(231,76,60,0.5);
+            box-shadow: 0 0 5px rgba(231,76,60,0.3);
         }
 
-        button {
+        form button {
             background-color: #e74c3c;
             color: white;
             font-weight: bold;
-            cursor: pointer;
             border: none;
+            cursor: pointer;
+            grid-column: span 2;
             transition: background 0.3s;
         }
 
-        button:hover {
+        form button:hover {
             background-color: #c0392b;
         }
 
         #results {
-            margin-top: 25px;
-            padding: 15px;
-            background: #f0f0f5;
-            border-radius: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            display: grid;
+            gap: 15px;
         }
 
-        @media (max-width: 640px) {
-            .container {
-                margin: 20px;
-                padding: 20px;
+        .card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            color: #e74c3c;
+        }
+
+        .card p {
+            margin: 5px 0;
+        }
+
+        @media (max-width: 600px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            form button {
+                grid-column: span 1;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Rental Alerts</h1>
+        <h1>Rental Alerts Dashboard</h1>
         <form id="scrape-form">
             <input type="text" name="location" placeholder="City (e.g., Columbus)" required>
             <input type="number" name="min_price" placeholder="Min Price" required>
             <input type="number" name="max_price" placeholder="Max Price" required>
-            <button type="submit">Scrape</button>
+            <button type="submit">Scrape Listings</button>
         </form>
-        <pre id="results"></pre>
+        <div id="results"></div>
     </div>
 
     <script>
@@ -100,9 +110,24 @@
             try {
                 const res = await fetch('/scrape', { method: 'POST', body: formData });
                 const data = await res.json();
-                document.getElementById('results').textContent = JSON.stringify(data, null, 2);
+
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
+
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${item.title}</h3>
+                        <p><strong>Price:</strong> ${item.price}</p>
+                        <p><strong>Location:</strong> ${item.location || 'N/A'}</p>
+                        <p><strong>Link:</strong> <a href="${item.link}" target="_blank">View Listing</a></p>
+                        <p><strong>Date Posted:</strong> ${item.date_posted}</p>
+                    `;
+                    resultsDiv.appendChild(card);
+                });
             } catch (error) {
-                document.getElementById('results').textContent = 'Error fetching data.';
+                document.getElementById('results').innerHTML = '<p style="color:red;">Error fetching data.</p>';
             }
         });
     </script>
