@@ -8,98 +8,153 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
-            color: #333;
+            background: #121212;
+            color: #e0e0e0;
         }
 
-        .container {
-            max-width: 700px;
-            margin: 50px auto;
+        /* Header */
+        header {
+            background-color: #00b894;
+            color: #121212;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        /* Main layout */
+        .main {
+            display: flex;
+            min-height: 90vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #1e1e1e;
+            color: #00b894;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .sidebar p {
+            margin: 10px 0;
+            color: #a0f0c0;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
             padding: 30px;
         }
 
-        h1 {
-            text-align: center;
-            color: #e74c3c;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-
+        /* Form styling */
         form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-
         form input, form button {
-            padding: 12px 15px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #00b894;
+            background: #121212;
+            color: #e0e0e0;
+            font-size: 1em;
         }
-
         form input:focus {
             outline: none;
-            border-color: #e74c3c;
-            box-shadow: 0 0 5px rgba(231,76,60,0.3);
+            border-color: #00b894;
+            box-shadow: 0 0 5px #00b894;
         }
-
         form button {
-            background-color: #e74c3c;
-            color: white;
+            background-color: #00b894;
+            color: #121212;
             font-weight: bold;
             border: none;
             cursor: pointer;
-            grid-column: span 2;
-            transition: background 0.3s;
+            transition: 0.3s;
         }
-
         form button:hover {
-            background-color: #c0392b;
+            background-color: #00a17a;
         }
 
-        #results {
-            display: grid;
-            gap: 15px;
+        /* Table for results */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #00b894;
+            color: #121212;
+        }
+        tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+        tr:hover {
+            background-color: #00a17a33; /* semi-transparent green */
         }
 
-        .card {
-            background: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        a {
+            color: #00b894;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
 
-        .card h3 {
-            margin: 0 0 10px;
-            color: #e74c3c;
-        }
-
-        .card p {
-            margin: 5px 0;
-        }
-
-        @media (max-width: 600px) {
-            form {
-                grid-template-columns: 1fr;
+        @media (max-width: 768px) {
+            .main {
+                flex-direction: column;
             }
-            form button {
-                grid-column: span 1;
+            .sidebar {
+                width: 100%;
+            }
+            form {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Rental Alerts Dashboard</h1>
-        <form id="scrape-form">
-            <input type="text" name="location" placeholder="City (e.g., Columbus)" required>
-            <input type="number" name="min_price" placeholder="Min Price" required>
-            <input type="number" name="max_price" placeholder="Max Price" required>
-            <button type="submit">Scrape Listings</button>
-        </form>
-        <div id="results"></div>
+    <header>Rental Alerts SaaS Dashboard</header>
+    <div class="main">
+        <div class="sidebar">
+            <h2>Filters</h2>
+            <p>Set your location and budget to view rental listings.</p>
+        </div>
+        <div class="content">
+            <form id="scrape-form">
+                <input type="text" name="location" placeholder="City (e.g., Columbus)" required>
+                <input type="number" name="min_price" placeholder="Min Price" required>
+                <input type="number" name="max_price" placeholder="Max Price" required>
+                <button type="submit">Scrape</button>
+            </form>
+            <table id="results">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Location</th>
+                        <th>Link</th>
+                        <th>Date Posted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Results inserted here dynamically -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -111,23 +166,23 @@
                 const res = await fetch('/scrape', { method: 'POST', body: formData });
                 const data = await res.json();
 
-                const resultsDiv = document.getElementById('results');
-                resultsDiv.innerHTML = '';
+                const tbody = document.querySelector('#results tbody');
+                tbody.innerHTML = '';
 
                 data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <h3>${item.title}</h3>
-                        <p><strong>Price:</strong> ${item.price}</p>
-                        <p><strong>Location:</strong> ${item.location || 'N/A'}</p>
-                        <p><strong>Link:</strong> <a href="${item.link}" target="_blank">View Listing</a></p>
-                        <p><strong>Date Posted:</strong> ${item.date_posted}</p>
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.title}</td>
+                        <td>${item.price}</td>
+                        <td>${item.location || 'N/A'}</td>
+                        <td><a href="${item.link}" target="_blank">View</a></td>
+                        <td>${item.date_posted}</td>
                     `;
-                    resultsDiv.appendChild(card);
+                    tbody.appendChild(row);
                 });
             } catch (error) {
-                document.getElementById('results').innerHTML = '<p style="color:red;">Error fetching data.</p>';
+                const tbody = document.querySelector('#results tbody');
+                tbody.innerHTML = `<tr><td colspan="5" style="color:red;">Error fetching data</td></tr>`;
             }
         });
     </script>
