@@ -49,7 +49,7 @@ python backend/app.py
 Go to http://127.0.0.1:5000/ in your browser
 
 You should see the Rental Alerts Dashboard placeholder page
-💡 How it Works
+## 💡 How it Works
 
 User signs up and sets rental preferences (location, budget).
 
@@ -61,7 +61,7 @@ Frontend displays listings in a simple dashboard.
 
 Future plans include email/SMS notifications and user subscription management.
 
-🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 Backend / API: Flask
 
@@ -75,7 +75,7 @@ Hosting / Deployment: Local / GitHub Pages for frontend, Heroku/Railway/Render f
 
 Email Alerts: Placeholder (future: SendGrid / Mailgun)
 
-📈 Future Enhancements
+## 📈 Future Enhancements
 
 Connect scraper to live sites like Craigslist/Zillow
 
@@ -91,6 +91,6 @@ Automated daily scraping using Celery + Redis
 
 Deploy full SaaS to cloud with CI/CD
 
-🔒 License
+## 🔒 License
 
 This project is licensed under the MIT License.
